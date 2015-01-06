@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2013,2015 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -77,7 +77,7 @@ module_param(do_not_cancel_vote, int, S_IWUSR | S_IRUGO);
 MODULE_PARM_DESC(do_not_cancel_vote, "Do not cancel votes for wcnss");
 
 static DEFINE_SPINLOCK(reg_spinlock);
-
+int wcnss_get_mux_control(void);
 #define MSM_RIVA_PHYS			0x03204000
 #define MSM_PRONTO_PHYS			0xfb21b000
 
@@ -889,6 +889,24 @@ static void wcnss_log_iris_regs(void)
 	}
 }
 
+int wcnss_get_mux_control(void)
+{
+	void __iomem *pmu_conf_reg;
+	struct wcnss_wlan_config *cfg;
+	u32 reg = 0;
+
+	cfg = wcnss_get_wlan_config();
+	if (NULL == cfg)
+		return 0;
+
+	pmu_conf_reg = cfg->msm_wcnss_base + PRONTO_PMU_OFFSET;
+	writel_relaxed(0, pmu_conf_reg);
+	reg = readl_relaxed(pmu_conf_reg);
+	reg |= WCNSS_PMU_CFG_GC_BUS_MUX_SEL_TOP;
+	writel_relaxed(reg, pmu_conf_reg);
+	return 1;
+}
+
 void wcnss_log_debug_regs_on_bite(void)
 {
 	struct platform_device *pdev = wcnss_get_platform_device();
@@ -911,7 +929,8 @@ void wcnss_log_debug_regs_on_bite(void)
 
 		if (clk_rate) {
 			wcnss_pronto_log_debug_regs();
-			wcnss_log_iris_regs();
+			if (wcnss_get_mux_control())
+				wcnss_log_iris_regs();
 		} else {
 			pr_err("clock frequency is zero, cannot access PMU or other registers\n");
 			wcnss_log_iris_regs();
@@ -925,9 +944,8 @@ void wcnss_reset_intr(void)
 {
 	if (wcnss_hardware_type() == WCNSS_PRONTO_HW) {
 		wcnss_pronto_log_debug_regs();
-#ifdef CONFIG_WCNSS_REGISTER_DUMP_ON_BITE
-		wcnss_log_iris_regs();
-#endif
+		if (wcnss_get_mux_control())
+			wcnss_log_iris_regs();
 		wmb();
 		__raw_writel(1 << 16, penv->fiq_reg);
 	} else {
