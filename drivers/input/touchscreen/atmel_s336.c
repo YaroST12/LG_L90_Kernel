@@ -5737,9 +5737,10 @@ int mxt_initialize_t9_input_device(struct mxt_data *data)
 
 		input_dev->evbit[0] = BIT_MASK(EV_ABS) | BIT_MASK(EV_KEY);
 
-		for (i = 0; i < data->pdata->t15_num_keys; i++)
+		for (i = 0; i < data->pdata->t15_num_keys; i++) {
 			input_set_capability(input_dev, EV_KEY, data->pdata->t15_keymap[i]);
 			input_dev->keybit[BIT_WORD(data->pdata->t15_keymap[i])] |= BIT_MASK(data->pdata->t15_keymap[i]);
+		}
 	}
 
 	set_bit(EV_KEY, input_dev->evbit);

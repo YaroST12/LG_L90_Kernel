@@ -6691,7 +6691,7 @@ static const struct dev_pm_ops tapan_pm_ops = {
 static int __devinit tapan_probe(struct platform_device *pdev)
 {
 	int ret = 0;
-	bool is_wcd9306;
+	int is_wcd9306;
 
 	is_wcd9306 = tapan_check_wcd9306(&pdev->dev, false);
 	if (is_wcd9306 < 0) {

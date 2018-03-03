@@ -69,10 +69,10 @@ static void boot_cradle_det_func(void)
 
 	printk("%s : boot pouch === > %d \n", __func__ , cradle->pouch);
 
-    if(cradle->pouch == 1)
-        state = SMARTCOVER_POUCH_CLOSED;
+    if (cradle->pouch == 1)
+		state = SMARTCOVER_POUCH_CLOSED;
     else
-        state = SMARTCOVER_POUCH_OPENED;
+		state = SMARTCOVER_POUCH_OPENED;
 
 	printk("%s : [Cradle] boot cradle value is %d\n", __func__ , state);
 
