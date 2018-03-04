@@ -354,7 +354,6 @@ CFLAGS_KERNEL	=
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
-
 # Use LINUXINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
 LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include \
@@ -574,6 +573,9 @@ KBUILD_CFLAGS	+= -Os
 else
 KBUILD_CFLAGS	+= -O2
 endif
+
+# CPU opt flags
+KBUILD_CFLAGS += -march=armv7ve -mtune=cortex-a7
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
 
