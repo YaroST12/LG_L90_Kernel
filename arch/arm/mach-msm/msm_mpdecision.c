@@ -116,8 +116,8 @@ enum {
 	HPUPDATE_IN_PROGRESS = 2, /* we are in the process of hotplugging */
 };
 
-static int msm_mpd_enabled = 1;
-module_param_named(enabled, msm_mpd_enabled, int, S_IRUGO | S_IWUSR | S_IWGRP);
+static int msm_mpd_force_disabled = 0;
+module_param_named(enabled, msm_mpd_force_disabled, int, 0444);
 
 static struct dentry *debugfs_base;
 static struct mpdecision msm_mpd;
@@ -701,7 +701,7 @@ static struct platform_driver msm_mpd_driver = {
 static int __init msm_mpdecision_init(void)
 {
 	int cpu;
-	if (!msm_mpd_enabled) {
+	if (msm_mpd_force_disabled) {
 		pr_info("Not enabled\n");
 		return 0;
 	}

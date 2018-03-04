@@ -146,8 +146,9 @@ static int pil_msa_wait_for_mba_ready(struct q6v5_data *drv)
 	u32 status;
 
 	/* Wait for PBL completion. */
+	pbl_mba_boot_timeout_ms = pbl_mba_boot_timeout_ms * 1000;
 	ret = readl_poll_timeout(drv->rmb_base + RMB_PBL_STATUS, status,
-		status != 0, POLL_INTERVAL_US, pbl_mba_boot_timeout_ms * 1000);
+		status != 0, POLL_INTERVAL_US, pbl_mba_boot_timeout_ms);
 	if (ret) {
 		dev_err(dev, "PBL boot timed out\n");
 		return ret;
@@ -159,7 +160,7 @@ static int pil_msa_wait_for_mba_ready(struct q6v5_data *drv)
 
 	/* Wait for MBA completion. */
 	ret = readl_poll_timeout(drv->rmb_base + RMB_MBA_STATUS, status,
-		status != 0, POLL_INTERVAL_US, pbl_mba_boot_timeout_ms * 1000);
+		status != 0, POLL_INTERVAL_US, pbl_mba_boot_timeout_ms);
 	if (ret) {
 		dev_err(dev, "MBA boot timed out\n");
 		return ret;
@@ -315,11 +316,12 @@ static int pil_msa_mba_init_image(struct pil_desc *pil,
 	writel_relaxed(0, drv->rmb_base + RMB_PMI_CODE_LENGTH);
 
 	/* Pass address of meta-data to the MBA and perform authentication */
+	modem_auth_timeout_ms = modem_auth_timeout_ms * 1000;
 	writel_relaxed(mdata_phys, drv->rmb_base + RMB_PMI_META_DATA);
 	writel_relaxed(CMD_META_DATA_READY, drv->rmb_base + RMB_MBA_COMMAND);
 	ret = readl_poll_timeout(drv->rmb_base + RMB_MBA_STATUS, status,
 		status == STATUS_META_DATA_AUTH_SUCCESS || status < 0,
-		POLL_INTERVAL_US, modem_auth_timeout_ms * 1000);
+		POLL_INTERVAL_US, modem_auth_timeout_ms);
 	if (ret) {
 		dev_err(pil->dev, "MBA authentication of headers timed out\n");
 	} else if (status < 0) {
@@ -365,9 +367,10 @@ static int pil_msa_mba_auth(struct pil_desc *pil)
 	s32 status;
 
 	/* Wait for all segments to be authenticated or an error to occur */
+	modem_auth_timeout_ms = modem_auth_timeout_ms * 1000;
 	ret = readl_poll_timeout(drv->rmb_base + RMB_MBA_STATUS, status,
 			status == STATUS_AUTH_COMPLETE || status < 0,
-			50, modem_auth_timeout_ms * 1000);
+			50, modem_auth_timeout_ms);
 	if (ret) {
 		dev_err(pil->dev, "MBA authentication of image timed out\n");
 	} else if (status < 0) {

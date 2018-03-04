@@ -716,14 +716,6 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
 		goto bad;
 	}
 	v->hash_dev_block_bits = ffs(num) - 1;
-
-	if (sscanf(argv[5], "%llu%c", &num_ll, &dummy) != 1 ||
-	    num_ll << (v->data_dev_block_bits - SECTOR_SHIFT) !=
-	    (sector_t)num_ll << (v->data_dev_block_bits - SECTOR_SHIFT)) {
-		ti->error = "Invalid data blocks";
-		r = -EINVAL;
-		goto bad;
-	}
 	v->data_blocks = num_ll;
 
 	if (ti->len > (v->data_blocks << (v->data_dev_block_bits - SECTOR_SHIFT))) {
@@ -732,13 +724,6 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
 		goto bad;
 	}
 
-	if (sscanf(argv[6], "%llu%c", &num_ll, &dummy) != 1 ||
-	    num_ll << (v->hash_dev_block_bits - SECTOR_SHIFT) !=
-	    (sector_t)num_ll << (v->hash_dev_block_bits - SECTOR_SHIFT)) {
-		ti->error = "Invalid hash start";
-		r = -EINVAL;
-		goto bad;
-	}
 	v->hash_start = num_ll;
 
 	v->alg_name = kstrdup(argv[7], GFP_KERNEL);
