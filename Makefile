@@ -574,8 +574,18 @@ else
 KBUILD_CFLAGS	+= -O2
 endif
 
-# CPU opt flags
-KBUILD_CFLAGS += -march=armv7ve -mtune=cortex-a7
+# F1xy opt flags
+KBUILD_CFLAGS += -DNDEBUG \
+			-march=armv7ve \
+			-mtune=cortex-a7 \
+			-pipe \
+			-fno-pic \
+			-fno-signed-zeros \
+			-fpredictive-commoning \
+			-fivopts
+
+# Tell gcc to never replace conditional load with a non-conditional one
+KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
 
