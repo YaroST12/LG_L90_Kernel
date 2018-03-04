@@ -68,7 +68,6 @@ static struct gpiomux_setting smsc_hub_susp_cfg = {
 	.drv = GPIOMUX_DRV_2MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
-
 static struct msm_gpiomux_config smsc_hub_configs[] = {
 	{
 		.gpio = 114, /* reset_n */
@@ -900,10 +899,8 @@ static void msm_gpiomux_sdc3_install(void)
 	msm_gpiomux_install(msm8226_sdc3_configs,
 			    ARRAY_SIZE(msm8226_sdc3_configs));
 }
-#else
-static void msm_gpiomux_sdc3_install(void) {}
 #endif /* CONFIG_MMC_MSM_SDC3_SUPPORT */
-
+#if 0
 void __init msm8226_init_gpiomux(void)
 {
 	int rc;
@@ -980,7 +977,7 @@ void __init msm8226_init_gpiomux(void)
 		msm_gpiomux_install(smsc_hub_configs,
 			ARRAY_SIZE(smsc_hub_configs));
 }
-
+#endif
 static void wcnss_switch_to_gpio(void)
 {
 	/* Switch MUX to GPIO */

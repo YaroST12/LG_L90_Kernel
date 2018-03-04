@@ -292,6 +292,7 @@ obj-$(CONFIG_ARCH_MPQ8092) += board-8092.o board-8092-gpiomux.o
 obj-$(CONFIG_ARCH_MPQ8092) += clock-8092.o
 ifdef CONFIG_MACH_LGE
 obj-$(CONFIG_ARCH_MSM8226) += lge/ board-8226-gpiomux.o
+CFLAGS_board-8226-gpiomux.o += $(call cc-disable-warning,unused-variable,)
 else
 obj-$(CONFIG_ARCH_MSM8226) += board-8226.o board-8226-gpiomux.o
 endif
