@@ -576,7 +576,7 @@ endif
 
 # F1xy opt flags
 KBUILD_CFLAGS += -DNDEBUG \
-			-march=armv7ve \
+			-march=armv7ve -marm \
 			-mtune=cortex-a7 \
 			-pipe \
 			-fno-pic \
