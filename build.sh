@@ -9,8 +9,8 @@ NC='\033[0m'
 RED='\033[0;31m'
 LGR='\033[1;32m'
 
-export GCC_PREFIX="arm-linux-gnueabihf-"
-export TC_PATH="${HOME}/build/mocha/gcc-linaro-7.2.1-arm/bin/"
+export GCC_PREFIX="arm-linux-gnueabi-"
+export TC_PATH="${HOME}/build/gcc7.2-32/bin"
 export objdir="${kernel_dir}/out"
 export builddir="${kernel_dir}/build"
 cd $kernel_dir
