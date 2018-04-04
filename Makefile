@@ -373,7 +373,8 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 KBUILD_CFLAGS	+= $(call cc-disable-warning,unused-const-variable,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,format-truncation,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,duplicate-decl-specifier,)
-			
+KBUILD_CFLAGS	+= $(call cc-disable-warning,unused-variable,)
+
 # Needed to unbreak GCC 7.x and above
 KBUILD_CFLAGS   += $(call cc-option,-fno-store-merging,)
 
@@ -576,13 +577,9 @@ endif
 
 # F1xy opt flags
 KBUILD_CFLAGS += -DNDEBUG \
-			-march=armv7ve -marm \
-			-mtune=cortex-a7 \
-			-pipe \
-			-fno-pic \
-			-fno-signed-zeros \
+			-marm -mcpu=cortex-a7 \
 			-fpredictive-commoning \
-			-fivopts
+			-fno-signed-zeros -fivopts \
 
 # Tell gcc to never replace conditional load with a non-conditional one
 KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
